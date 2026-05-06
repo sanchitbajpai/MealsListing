@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meals App - Find Your Favorite Recipes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="bg-white dark:bg-gray-800 shadow p-4 sticky top-0 z-40">
+    <div class="flex justify-between items-center max-w-7xl mx-auto">
+      <div class="flex items-center gap-3">
+        <h1 class="text-2xl font-bold dark:text-white">🍽️ Meals</h1>
+        <button id="favoriteTab" class="text-sm px-3 py-1 rounded bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
+          ⭐ Favorites
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <input id="searchInput"
+          type="text"
+          placeholder="Search meals..."
+          class="border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        
+        <button id="darkModeToggle" class="p-2 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+          <span id="themeIcon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loader -->
+  <p id="loader" class="text-center mt-8 text-gray-600 dark:text-gray-400 animate-pulse">Loading...</p>
+
+  <!-- Error -->
+  <p id="error" class="text-center text-red-500 dark:text-red-400 mt-4"></p>
+
+  <!-- Skeleton Loader -->
+  <div id="skeletonLoader" class="p-4 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="bg-gray-300 dark:bg-gray-700 rounded-xl h-64 animate-pulse"></div>
+      <div class="bg-gray-300 dark:bg-gray-700 rounded-xl h-64 animate-pulse"></div>
+      <div class="bg-gray-300 dark:bg-gray-700 rounded-xl h-64 animate-pulse"></div>
+      <div class="bg-gray-300 dark:bg-gray-700 rounded-xl h-64 animate-pulse"></div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <main class="p-4 max-w-7xl mx-auto">
+    <div id="view-indicator" class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+      Showing <span id="view-type">All Meals</span>
+    </div>
+    <div id="meals"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl hover:scale-110 transition">❌</button>
+      
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Left side: Image -->
+        <div class="md:w-1/2">
+          <img id="modalImg" class="w-full h-64 md:h-96 object-cover rounded-lg"/>
+        </div>
+
+        <!-- Right side: Details -->
+        <div class="md:w-1/2">
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <h2 id="modalTitle" class="text-2xl font-bold dark:text-white mb-2"></h2>
+              <p id="modalCategory" class="text-sm text-gray-500 dark:text-gray-400 mb-4"></p>
+            </div>
+            <button id="modalFavBtn" onclick="toggleFavorite(currentMealId)" class="text-3xl hover:scale-110 transition">☆</button>
+          </div>
+
+          <!-- Ingredients -->
+          <div class="mb-6">
+            <h3 class="font-bold text-lg dark:text-white mb-3">Ingredients</h3>
+            <ul id="modalIngredients" class="space-y-2 text-sm dark:text-gray-300">
+            </ul>
+          </div>
+
+          <!-- Instructions -->
+          <div class="mb-6">
+            <h3 class="font-bold text-lg dark:text-white mb-3">Instructions</h3>
+            <p id="modalInstructions" class="text-sm leading-relaxed dark:text-gray-300"></p>
+          </div>
+
+          <!-- YouTube Link -->
+          <div id="youtubeContainer" class="mb-6"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div id="emptyState" class="hidden text-center py-16">
+    <p class="text-2xl dark:text-gray-400">No meals found 😞</p>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
