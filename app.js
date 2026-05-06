@@ -146,22 +146,22 @@ function renderMeals(meals) {
   emptyState.classList.add("hidden");
   
   container.innerHTML = meals.map(meal => `
-    <div data-meal-id="${meal.id}" onclick="openModal(${meal.id})"
+    <div data-meal-id="${meal.idMeal}" onclick="openModal(${meal.idMeal})"
       class="bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden group">
 
       <div class="relative overflow-hidden">
-        <img src="${meal.thumbnail}"
+        <img src="${meal.strMealThumb}"
           class="w-full h-48 object-cover group-hover:scale-105 transition" />
         
         <button class="heart-btn absolute top-2 right-2 text-2xl bg-white dark:bg-gray-700 rounded-full w-10 h-10 flex items-center justify-center shadow hover:scale-110 transition" 
-          onclick="event.stopPropagation(); toggleFavorite(${meal.id})">
-          ${isFavorited(meal.id) ? "❤️" : "🤍"}
+          onclick="event.stopPropagation(); toggleFavorite(${meal.idMeal})">
+          ${isFavorited(meal.idMeal) ? "❤️" : "🤍"}
         </button>
       </div>
 
       <div class="p-3">
-        <h2 class="font-semibold text-sm dark:text-white line-clamp-1">${meal.name}</h2>
-        <p class="text-xs text-gray-500 dark:text-gray-400">${meal.category}</p>
+        <h2 class="font-semibold text-sm dark:text-white line-clamp-1">${meal.strMeal}</h2>
+        <p class="text-xs text-gray-500 dark:text-gray-400">${meal.strCategory}</p>
       </div>
 
     </div>
@@ -172,8 +172,8 @@ function renderMeals(meals) {
 function parseIngredients(meal) {
   const ingredients = [];
   for (let i = 1; i <= 20; i++) {
-    const ingredient = meal[`ingredient${i}`];
-    const measure = meal[`measure${i}`];
+    const ingredient = meal[`strIngredient${i}`];
+    const measure = meal[`strMeasure${i}`];
     if (ingredient && ingredient.trim()) {
       ingredients.push(`${ingredient} - ${measure || "as needed"}`);
     }
@@ -183,12 +183,12 @@ function parseIngredients(meal) {
 
 function openModal(id) {
   currentMealId = id;
-  const meal = allMeals.find(m => m.id === id);
+  const meal = allMeals.find(m => m.idMeal == id);
 
-  document.getElementById("modalTitle").innerText = meal.name;
-  document.getElementById("modalCategory").innerText = `Category: ${meal.category}`;
-  document.getElementById("modalImg").src = meal.thumbnail;
-  document.getElementById("modalInstructions").innerText = meal.instructions;
+  document.getElementById("modalTitle").innerText = meal.strMeal;
+  document.getElementById("modalCategory").innerText = `Category: ${meal.strCategory}`;
+  document.getElementById("modalImg").src = meal.strMealThumb;
+  document.getElementById("modalInstructions").innerText = meal.strInstructions;
 
   // Ingredients
   const ingredients = parseIngredients(meal);
@@ -202,9 +202,9 @@ function openModal(id) {
 
   // YouTube Link
   const youtubeContainer = document.getElementById("youtubeContainer");
-  if (meal.youtube_url) {
+  if (meal.strYoutube) {
     youtubeContainer.innerHTML = `
-      <a href="${meal.youtube_url}" target="_blank" class="inline-block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition">
+      <a href="${meal.strYoutube}" target="_blank" class="inline-block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded font-semibold transition">
         🎥 Watch on YouTube
       </a>
     `;
